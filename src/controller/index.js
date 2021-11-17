@@ -1,4 +1,4 @@
-const {registerUser, addBook } = require('../services/index')
+const {registerUser, addBook, validateUserLogin, getBooks } = require('../services/index')
 
 const registerNewUser = async (req, res, next) => {
     try {
@@ -48,7 +48,29 @@ const addNewBook = async (req, res, next) => {
         return next(error)
     }
 }
+const getAllBooks = async (req, res, next) => {
+    try {
+        const allBooks = await getBooks()
+        res.status(200).json({
+            status: 200,
+            message: "Books fetched successfully",
+            data: allBooks
+        })
+    } catch (error) {
+        res.status(404).json({
+            status: 'fail',
+            message: error.message
 
+        })
+    }
+}
+const getABook = async (req, res, next) => {
+    try {
+        
+    } catch (error) {
+        
+    }
+}
 const forgotPassword = async (req, res, next) => {
     try {
         const user = await updatePassword(req)
@@ -75,4 +97,4 @@ const resetPassword = async (req, res, next) => {
     }
 }
 
-module.exports = { registerNewUser, loginUser, addNewBook, forgotPassword, resetPassword  }
+module.exports = { registerNewUser, loginUser, addNewBook, forgotPassword, resetPassword, getAllBooks  }

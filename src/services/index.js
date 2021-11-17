@@ -46,12 +46,14 @@ const addBook = async(body) => {
 }
 
 
+const getBooks = () => db.any(queries.getBooks)
 
-
+const getBook = () => db.any(queries.get)
 module.exports = {
     registerUser,
     validateUserReg,
     validateUserLogin,
     validatePassword,
-    addBook
+    addBook,
+    getBooks
 }

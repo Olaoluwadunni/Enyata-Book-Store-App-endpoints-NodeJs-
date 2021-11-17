@@ -17,13 +17,12 @@ const queries = {
     `,    
     getBooks: `
         SELECT * FROM bookdetails
-        WHERE title=$1
     `,
 
-    // getUserById: `
-    // SELECT * FROM users
-    // WHERE id=$1
-    // `,
+    getBookById: `
+    SELECT * FROM bookdetails
+    WHERE id=$1
+    `,
 
     // addBook: `
     // INSERT INTO inc(
