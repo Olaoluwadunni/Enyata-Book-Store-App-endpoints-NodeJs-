@@ -4,10 +4,14 @@ const queries = {
             email,
             password,
             firstName,
-            lastName
+            lastName,
+            role
         ) VALUES ($1, $2, $3, $4)
         RETURNING *
     `,
+    getUsers: `
+        SELECT * FROM users
+    `, 
     addBooks: `
         INSERT INTO bookdetails (
             title,
@@ -20,10 +24,22 @@ const queries = {
     `,
 
     getBookById: `
-    SELECT * FROM bookdetails
-    WHERE id=$1
+        SELECT * FROM bookdetails
+        WHERE id=$1
     `,
-
+    addNewBookToUserCatalogue: `
+        INSERT INTO usercatalogue (
+            user_book_id,
+            title,
+            author,
+        ) VALUES ($1, $2, $3, $4)
+        RETURNING *
+    `,
+    deleteBook: `
+            DELETE FROM books
+            WHERE id = $1
+    `
+             
     // addBook: `
     // INSERT INTO inc(
     //     client_id, 
@@ -46,13 +62,13 @@ const queries = {
     //     FROM incidents
     //     WHERE client_id=$1
     // `,
-    updatePassword: `
-        Update users
-        set password = $1,
-        updated_at= NOW()
-        where id = $2
-        RETURNING *
-    `
+    // updatePassword: `
+    //     Update users
+    //     set password = $1,
+    //     updated_at= NOW()
+    //     where id = $2
+    //     RETURNING *
+    // `
     }
     
 

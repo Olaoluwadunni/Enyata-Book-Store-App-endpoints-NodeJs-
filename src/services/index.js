@@ -11,6 +11,9 @@ const registerUser = async(body) => {
     return db.one(queries.addNewUser, payload)
 }
 
+//get all users 
+const getUsers = () => db.any(queries.getUsers)
+
 //validate user registration
 const validateUserReg = (body) => {
     const { email, password, firstName, lastName } = body
@@ -37,7 +40,7 @@ const validatePassword= async(user, password) => {
     return false
 }
 
-
+//add new book
 const addBook = async(body) => {
     const { title, author } = body
 
@@ -45,15 +48,25 @@ const addBook = async(body) => {
     return db.one(queries.addBooks, payload)
 }
 
-
+// get all books
 const getBooks = () => db.any(queries.getBooks)
 
-const getBook = () => db.any(queries.get)
+// get book by id
+const getBook = async(id) => db.oneOrNone(queries.getBookById, id)
+
+//delete book
+const deleteBook = async(id) => {
+    return db.none(queries.deleteBook, id)
+}
+
 module.exports = {
     registerUser,
+    getUsers,
     validateUserReg,
     validateUserLogin,
     validatePassword,
     addBook,
-    getBooks
+    getBooks,
+    getBook,
+    deleteBook
 }

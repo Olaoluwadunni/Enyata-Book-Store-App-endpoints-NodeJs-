@@ -1,4 +1,4 @@
-const {registerUser, addBook, validateUserLogin, getBooks } = require('../services/index')
+const {registerUser,getUsers, addBook, deleteBook, validatePassword, getBooks, getBook } = require('../services/index')
 
 const registerNewUser = async (req, res, next) => {
     try {
@@ -15,24 +15,43 @@ const registerNewUser = async (req, res, next) => {
         return next(error)
     }
 }
-const loginUser = async(req, res, next) => {
+const getAllUsers = async (req, res, next) => {
     try {
-        const { email, password } = req
-        const validated = await validateUserLogin(email, password)
-
-        res.status(201).json({
-            status: 'success',
-            message: `User logged in successfully`,
-            data: validated
+        const allUsers = await getUsers()
+        res.status(200).json({
+            status: 200,
+            message: "Users fetched successfully",
+            data: allUsers
         })
     } catch (error) {
-        res.status(401).json({
+        res.status(404).json({
+            status: 'fail',
+            message: error.message
+
+        })
+    }
+}
+const loginUser = async(req, res, next) => {
+    try {
+        const { email, body: {password} } = req
+        const validated = await validatePassword(email, password)
+        if (!validated) {
+            res.status(401).json({
             status: 'fail',
             message: error.message
         })
+    } else {
+        res.status(201).json({
+        status: 'success',
+        message: `User logged in successfully`,
+        data: validated
+        })
     }
-    next()
+ } catch (error) {
+        return next(error)
+    }
 }
+
 const addNewBook = async (req, res, next) => {
     try {
         const {body} = req
@@ -64,11 +83,23 @@ const getAllBooks = async (req, res, next) => {
         })
     }
 }
-const getABook = async (req, res, next) => {
+const getABook = async (req, res) => {
     try {
-        
+        const { params: { id } } = req
+        const book = await getBook(id)
+        if (book.length === 0) {
+            throw new Error('No book found')
+        }
+        res.status(200).json({
+            status:200,
+            message: "This book exist and is fetched successfully",
+            data: book
+        })
     } catch (error) {
-        
+        res.status(404).json({
+            status:'fail',
+            message: error.message
+        })
     }
 }
 const forgotPassword = async (req, res, next) => {
@@ -96,5 +127,19 @@ const resetPassword = async (req, res, next) => {
         next(error)
     }
 }
+const deleteABook = async(req, res, next) => {
+    try {
+        const { body, params: {id}} = req
+        const deleteBook = await deleteBook(body, id)
+        
+        res.status(200).json({
+            status: "Success",
+            message: `Catalogue books deleted successfully`,
+            data: deleteBook
+        })
+    } catch (error) {
+        return next(error)
+    }
+}
 
-module.exports = { registerNewUser, loginUser, addNewBook, forgotPassword, resetPassword, getAllBooks  }
+module.exports = { registerNewUser, getAllUsers, loginUser, addNewBook, forgotPassword, resetPassword, getAllBooks, getABook, deleteABook }
